@@ -21,7 +21,7 @@
           <tr>
             <th v-if="lineNumbers" class="line-numbers"></th>
             <th v-for="(column, index) in columns"
-              @click="sort(index)"
+              @click="column.sortable ? sort(index) : false"
               :class="columnHeaderClass(column, index)"
               :style="{width: column.width ? column.width : 'auto'}"
               v-if="!column.hidden">
@@ -201,7 +201,7 @@ import {format, parse, compareAsc} from 'date-fns/esm'
         if (this.sortColumn === index) {
           this.sortType = this.sortType === 'asc' ? 'desc' : 'asc';
         } else {
-          this.sortType = 'asc';
+          this.sortType = 'desc';
           this.sortColumn = index;
         }
         this.sortChanged = true;
