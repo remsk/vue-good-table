@@ -140,6 +140,7 @@ import {format, parse, compareAsc} from 'date-fns/esm'
       paginate: {default: false},
       lineNumbers: {default: false},
       defaultSortBy: {default: null},
+      secondarySortType: {default: 'asc'},
       responsive: {default: true},
       rtl: {default: false},
       rowStyleClass: {default: null, type: [Function, String]},
@@ -538,9 +539,12 @@ import {format, parse, compareAsc} from 'date-fns/esm'
             let i = cook(x);
             let j = cook(y);
 
+            //if equal, secondary sorting takes place (doesn't handle dates, to do)
             if (i === j) {
               i = cook(x, true);
               j = cook(y, true);
+
+            return (i < j ? -1 : (i > j ? 1 : 0)) * (this.secondarySortType === 'desc' ? -1 : 1);
             }
 
             // date comparison here
