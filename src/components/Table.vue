@@ -510,30 +510,46 @@ import {format, parse, compareAsc} from 'date-fns/esm'
             if (!this.columns[this.sortColumn])
               return 0;
 
-            const cook = (d) => {
-              d = this.collect(d, this.columns[this.sortColumn].field);
+            const cook = (d, sameVals = false) => {
+              // isolate the sort.column value so we can change if default is true
+              let sortCol = this.sortColumn
+
+              // if default is true, it means that the two values to compare are equal
+              // in that case, we compare the default sorting column
+              if (!sameVals) {
+                sortCol = this.sortColumn
+              } else {
+                sortCol = 0
+              }
+
+              d = this.collect(d, this.columns[sortCol].field);
 
               //take care of dates too.
-              if (this.columns[this.sortColumn].type === 'date') {
-                d = parse(d + '', this.columns[this.sortColumn].inputFormat, new Date());
+              if (this.columns[sortCol].type === 'date') {
+                d = parse(d + '', this.columns[sortCol].inputFormat, new Date());
               } else if (typeof(d) === 'string') {
                 d = d.toLowerCase();
-                if (this.columns[this.sortColumn].type == 'number')
+                if (this.columns[sortCol].type == 'number')
                   d = d.indexOf('.') >= 0 ? parseFloat(d) : parseInt(d);
               }
               return d;
             }
 
-            x = cook(x);
-            y = cook(y);
+            let i = cook(x);
+            let j = cook(y);
+
+            if (i === j) {
+              i = cook(x, true);
+              j = cook(y, true);
+            }
 
             // date comparison here
             if (this.columns[this.sortColumn].type === 'date') {
-              return (compareAsc(x, y)) * (this.sortType === 'desc' ? -1 : 1);
+              return (compareAsc(i, j)) * (this.sortType === 'desc' ? -1 : 1);
             }
 
             // regular comparison here
-            return (x < y ? -1 : (x > y ? 1 : 0)) * (this.sortType === 'desc' ? -1 : 1);
+            return (i < j ? -1 : (i > j ? 1 : 0)) * (this.sortType === 'desc' ? -1 : 1);
           })
         }
 
