@@ -11,9 +11,6 @@
           <tr v-if="globalSearch && externalSearchQuery == null">
             <td :colspan="lineNumbers ? columns.length + 1: columns.length">
               <div class="global-search">
-                <span class="global-search-icon">
-                  <img src="../images/search_icon.png" alt="Search Icon" />
-                </span>
                 <input type="text" class="form-control global-search-input" :placeholder="globalSearchPlaceholder" v-model="globalSearchTerm" @keyup.enter="searchTable()" />
               </div>
             </td>
@@ -910,7 +907,7 @@ import {format, parse, compareAsc} from 'date-fns/esm'
     position:  relative;
     padding-left: 40px;
   }
-  .global-search-icon{
+/*  .global-search-icon{
     position:  absolute;
     left:  0px;
     max-width:  32px;
@@ -919,7 +916,7 @@ import {format, parse, compareAsc} from 'date-fns/esm'
     max-width:  100%;
     margin-top:  8px;
     opacity: 0.5;
-  }
+  }*/
   table .global-search-input{
    width:  calc(100% - 30px);
   }
